@@ -23,7 +23,7 @@ public class LaunchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
         handler = new MyHandler(this);
-        handler.sendEmptyMessageDelayed(0, 2000);
+        handler.sendEmptyMessageDelayed(0, 3000);
     }
 
     public static class MyHandler extends Handler {
