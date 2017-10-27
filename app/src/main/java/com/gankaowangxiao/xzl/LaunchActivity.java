@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.gankaowangxiao.xzl.base.BaseActivity;
+import com.tencent.bugly.beta.Beta;
 
 import java.lang.ref.WeakReference;
 

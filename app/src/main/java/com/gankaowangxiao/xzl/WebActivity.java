@@ -11,6 +11,8 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,7 +28,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gankaowangxiao.xzl.adapter.TabPagerAdapter;
 import com.gankaowangxiao.xzl.base.BaseActivity;
+import com.gankaowangxiao.xzl.fragment.WriterFrragment;
+import com.gankaowangxiao.xzl.popup.SlideFromBottomDialogFragment;
+import com.gankaowangxiao.xzl.popup.SlideFromBottomPopup;
+import com.gankaowangxiao.xzl.utils.SoundPlayUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -35,15 +45,21 @@ import static android.view.View.VISIBLE;
  * Created by xiaotantan on 17/10/11.
  */
 
-public class WebActivity extends BaseActivity implements View.OnClickListener {
+public class WebActivity extends FragmentActivity implements View.OnClickListener {
     private TextView tvTitle;
     private RelativeLayout llBack;
     private ImageView ivHome;
-    private ProgressWebView webView;
+    private ImageView ivHome1;
+    private com.gankaowangxiao.xzl.ProgressWebView webView;
     private View viewBootoom;
     private WebSettings webSettings;
     private boolean needClearHistory = false;
     private String HomeUrl = "http://zhuli.gankao.com/go";
+    private SlideFromBottomPopup slideFromBottomPopup;
+    private TabPagerAdapter mPagerAdater;
+    List<Fragment> fragments = new ArrayList<>();
+    private WriterFrragment writerFrragment;
+    private onDisMissListener onDisMissListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +67,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         initView();
         initWebView();
+        SoundPlayUtils.init(this);
     }
 
     private void initWebView() {
@@ -73,7 +90,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         webSettings.setUserAgentString(ua + " /gkagent" + getVersionName(this) + " ");
         webView.addJavascriptInterface(this, "JsBridgeApp");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            webView.setWebContentsDebuggingEnabled(true);
+            ProgressWebView.setWebContentsDebuggingEnabled(true);
         }
         webView.loadUrl(HomeUrl);
     }
@@ -111,11 +128,17 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         tvTitle = (TextView) findViewById(R.id.tv_title);
         llBack = (RelativeLayout) findViewById(R.id.iv_back);
         ivHome = (ImageView) findViewById(R.id.iv_rigth);
+        ivHome1 = (ImageView) findViewById(R.id.iv_rigth1);
         viewBootoom = findViewById(R.id.view);
         webView = (ProgressWebView) findViewById(R.id.web_view);
         llBack.setVisibility(GONE);
         llBack.setOnClickListener(this);
         ivHome.setOnClickListener(this);
+        ivHome1.setOnClickListener(this);
+
+        writerFrragment = WriterFrragment.newInstance();
+        fragments.add(writerFrragment);
+        mPagerAdater = new TabPagerAdapter(this.getSupportFragmentManager(), fragments);
     }
 
     @Override
@@ -135,7 +158,23 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
                 needClearHistory = true;
                 webView.loadUrl(HomeUrl);
                 break;
+            case R.id.iv_rigth1:
+                final SlideFromBottomDialogFragment slideFromBottomDialogFragment = new SlideFromBottomDialogFragment();
+                slideFromBottomDialogFragment.setDissMissListener(new onDisMissListener() {
+                    @Override
+                    public void onDialogDisMiss() {
+                        slideFromBottomDialogFragment.dismiss();
+                    }
+                });
+                slideFromBottomDialogFragment.show(getSupportFragmentManager(), "WEB");
+                break;
+            default:
+                break;
         }
+    }
+
+    public interface onDisMissListener {
+        void onDialogDisMiss();
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -182,8 +221,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             if (newProgress == 100) {
-                if (webView != null && webView.getProgressbar() != null)
+                if (webView != null && webView.getProgressbar() != null) {
                     webView.getProgressbar().setVisibility(GONE);
+                }
             } else {
                 if (webView != null && webView.getProgressbar() != null) {
                     if (webView.getProgressbar().getVisibility() == GONE) {
@@ -200,8 +240,9 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
             if (TextUtils.isEmpty(name)) {
                 name = "赶考小助手";
             }
-            if (tvTitle != null)
+            if (tvTitle != null) {
                 tvTitle.setText(name);
+            }
         }
     }
 
