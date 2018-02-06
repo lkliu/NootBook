@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_eduhdsdk" default="compile.module.eduhdsdk">
+  <dirname property="module.eduhdsdk.basedir" file="${ant.file.module_eduhdsdk}"/>
+  
+  <property name="module.jdk.home.eduhdsdk" value="${jdk.home.android_api_25_platform}"/>
+  <property name="module.jdk.bin.eduhdsdk" value="${jdk.bin.android_api_25_platform}"/>
+  <property name="module.jdk.classpath.eduhdsdk" value="jdk.classpath.android_api_25_platform"/>
+  
+  <property name="compiler.args.eduhdsdk" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="eduhdsdk.output.dir" value="${module.eduhdsdk.basedir}/build/intermediates/classes/debug"/>
+  <property name="eduhdsdk.testoutput.dir" value="${module.eduhdsdk.basedir}/build/intermediates/classes/test/debug"/>
+  
+  <path id="eduhdsdk.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="eduhdsdk.module.production.classpath">
+    <path refid="${module.jdk.classpath.eduhdsdk}"/>
+    <pathelement location="${classroomsdk.output.dir}"/>
+  </path>
+  
+  <path id="eduhdsdk.runtime.production.module.classpath">
+    <pathelement location="${eduhdsdk.output.dir}"/>
+    <path refid="classroomsdk.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="eduhdsdk.module.classpath">
+    <path refid="${module.jdk.classpath.eduhdsdk}"/>
+    <pathelement location="${eduhdsdk.output.dir}"/>
+    <pathelement location="${classroomsdk.testoutput.dir}"/>
+    <pathelement location="${classroomsdk.output.dir}"/>
+  </path>
+  
+  <path id="eduhdsdk.runtime.module.classpath">
+    <pathelement location="${eduhdsdk.testoutput.dir}"/>
+    <pathelement location="${eduhdsdk.output.dir}"/>
+    <path refid="classroomsdk.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.eduhdsdk">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.eduhdsdk">
+    <patternset refid="excluded.from.module.eduhdsdk"/>
+  </patternset>
+  
+  <path id="eduhdsdk.module.sourcepath">
+    <dirset dir="${module.eduhdsdk.basedir}">
+      <include name="build/generated/source/r/debug"/>
+      <include name="build/generated/source/aidl/debug"/>
+      <include name="build/generated/source/buildConfig/debug"/>
+      <include name="build/generated/source/apt/debug"/>
+      <include name="src/main/res"/>
+      <include name="src/main/assets"/>
+      <include name="src/main/java"/>
+    </dirset>
+  </path>
+  
+  <path id="eduhdsdk.module.test.sourcepath">
+    <dirset dir="${module.eduhdsdk.basedir}">
+      <include name="build/generated/source/r/androidTest/debug"/>
+      <include name="build/generated/source/aidl/androidTest/debug"/>
+      <include name="build/generated/source/buildConfig/androidTest/debug"/>
+      <include name="build/generated/source/apt/androidTest/debug"/>
+      <include name="src/androidTest/java"/>
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.eduhdsdk" depends="compile.module.eduhdsdk.production,compile.module.eduhdsdk.tests" description="Compile module eduhdsdk"/>
+  
+  <target name="compile.module.eduhdsdk.production" depends="register.custom.compilers,compile.module.classroomsdk" description="Compile module eduhdsdk; production classes">
+    <mkdir dir="${eduhdsdk.output.dir}"/>
+    <javac2 destdir="${eduhdsdk.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.eduhdsdk}/javac">
+      <compilerarg line="${compiler.args.eduhdsdk}"/>
+      <bootclasspath refid="eduhdsdk.module.bootclasspath"/>
+      <classpath refid="eduhdsdk.module.production.classpath"/>
+      <src refid="eduhdsdk.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.eduhdsdk"/>
+    </javac2>
+    
+    <copy todir="${eduhdsdk.output.dir}">
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/r/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/aidl/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/buildConfig/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/apt/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/src/main/res">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/src/main/assets">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.eduhdsdk.tests" depends="register.custom.compilers,compile.module.eduhdsdk.production" description="compile module eduhdsdk; test classes" unless="skip.tests">
+    <mkdir dir="${eduhdsdk.testoutput.dir}"/>
+    <javac2 destdir="${eduhdsdk.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.eduhdsdk}/javac">
+      <compilerarg line="${compiler.args.eduhdsdk}"/>
+      <bootclasspath refid="eduhdsdk.module.bootclasspath"/>
+      <classpath refid="eduhdsdk.module.classpath"/>
+      <src refid="eduhdsdk.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.eduhdsdk"/>
+    </javac2>
+    
+    <copy todir="${eduhdsdk.testoutput.dir}">
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/r/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/aidl/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/buildConfig/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/build/generated/source/apt/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/src/androidTest/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.eduhdsdk.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.eduhdsdk" description="cleanup module">
+    <delete dir="${eduhdsdk.output.dir}"/>
+    <delete dir="${eduhdsdk.testoutput.dir}"/>
+  </target>
+</project>

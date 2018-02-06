@@ -53,7 +53,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="40dp"
                 android:singleLine="true"
-                android:text="批量关卡"
                 android:textColor="@color/c_f"
                 android:textSize="14sp" />
         </RelativeLayout>
@@ -116,12 +115,11 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:padding="1px"
         android:background="@drawable/white_gray_line"
         android:divider="@drawable/divider_line"
         android:orientation="vertical"
-        android:showDividers="middle"
-        >
+        android:padding="1px"
+        android:showDividers="middle">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -129,8 +127,7 @@
             android:layout_weight="1"
             android:divider="@drawable/divider_line"
             android:orientation="horizontal"
-            android:showDividers="middle"
-            >
+            android:showDividers="middle">
 
             <TextView
                 android:id="@+id/tv_1"

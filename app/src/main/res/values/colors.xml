@@ -13,4 +13,5 @@
     <color name="gray">#EDEDED</color>
     <color name="blank">#000000</color>
     <color name="hinit">#c8c8c2</color>
+    <color name="color_trance">#50000000</color>
 </resources>

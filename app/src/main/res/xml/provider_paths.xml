@@ -8,4 +8,11 @@
     <external-path
         name="beta_external_files_path"
         path="Android/data/" />
+
+    <external-path
+        name="files_root"
+        path="Android/data/com.talkcloud.edu/" />
+    <external-path
+        name="external_storage_root"
+        path="." />
 </paths>

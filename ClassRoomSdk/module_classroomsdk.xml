@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_classroomsdk" default="compile.module.classroomsdk">
+  <dirname property="module.classroomsdk.basedir" file="${ant.file.module_classroomsdk}"/>
+  
+  <property name="module.jdk.home.classroomsdk" value="${jdk.home.android_api_25_platform}"/>
+  <property name="module.jdk.bin.classroomsdk" value="${jdk.bin.android_api_25_platform}"/>
+  <property name="module.jdk.classpath.classroomsdk" value="jdk.classpath.android_api_25_platform"/>
+  
+  <property name="compiler.args.classroomsdk" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="classroomsdk.output.dir" value="${module.classroomsdk.basedir}/build/intermediates/classes/debug"/>
+  <property name="classroomsdk.testoutput.dir" value="${module.classroomsdk.basedir}/build/intermediates/classes/test/debug"/>
+  
+  <path id="classroomsdk.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="classroomsdk.module.production.classpath">
+    <path refid="${module.jdk.classpath.classroomsdk}"/>
+  </path>
+  
+  <path id="classroomsdk.runtime.production.module.classpath">
+    <pathelement location="${classroomsdk.output.dir}"/>
+  </path>
+  
+  <path id="classroomsdk.module.classpath">
+    <path refid="${module.jdk.classpath.classroomsdk}"/>
+    <pathelement location="${classroomsdk.output.dir}"/>
+  </path>
+  
+  <path id="classroomsdk.runtime.module.classpath">
+    <pathelement location="${classroomsdk.testoutput.dir}"/>
+    <pathelement location="${classroomsdk.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.classroomsdk">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.classroomsdk">
+    <patternset refid="excluded.from.module.classroomsdk"/>
+  </patternset>
+  
+  <path id="classroomsdk.module.sourcepath">
+    <dirset dir="${module.classroomsdk.basedir}">
+      <include name="build/generated/source/r/debug"/>
+      <include name="build/generated/source/aidl/debug"/>
+      <include name="build/generated/source/buildConfig/debug"/>
+      <include name="build/generated/source/apt/debug"/>
+      <include name="src/main/res"/>
+      <include name="src/main/assets"/>
+      <include name="src/main/java"/>
+    </dirset>
+  </path>
+  
+  <path id="classroomsdk.module.test.sourcepath">
+    <dirset dir="${module.classroomsdk.basedir}">
+      <include name="build/generated/source/r/androidTest/debug"/>
+      <include name="build/generated/source/aidl/androidTest/debug"/>
+      <include name="build/generated/source/buildConfig/androidTest/debug"/>
+      <include name="build/generated/source/apt/androidTest/debug"/>
+      <include name="src/androidTest/java"/>
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.classroomsdk" depends="compile.module.classroomsdk.production,compile.module.classroomsdk.tests" description="Compile module ClassRoomSdk"/>
+  
+  <target name="compile.module.classroomsdk.production" depends="register.custom.compilers" description="Compile module ClassRoomSdk; production classes">
+    <mkdir dir="${classroomsdk.output.dir}"/>
+    <javac2 destdir="${classroomsdk.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.classroomsdk}/javac">
+      <compilerarg line="${compiler.args.classroomsdk}"/>
+      <bootclasspath refid="classroomsdk.module.bootclasspath"/>
+      <classpath refid="classroomsdk.module.production.classpath"/>
+      <src refid="classroomsdk.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.classroomsdk"/>
+    </javac2>
+    
+    <copy todir="${classroomsdk.output.dir}">
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/r/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/aidl/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/buildConfig/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/apt/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/src/main/res">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/src/main/assets">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.classroomsdk.tests" depends="register.custom.compilers,compile.module.classroomsdk.production" description="compile module ClassRoomSdk; test classes" unless="skip.tests">
+    <mkdir dir="${classroomsdk.testoutput.dir}"/>
+    <javac2 destdir="${classroomsdk.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.classroomsdk}/javac">
+      <compilerarg line="${compiler.args.classroomsdk}"/>
+      <bootclasspath refid="classroomsdk.module.bootclasspath"/>
+      <classpath refid="classroomsdk.module.classpath"/>
+      <src refid="classroomsdk.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.classroomsdk"/>
+    </javac2>
+    
+    <copy todir="${classroomsdk.testoutput.dir}">
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/r/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/aidl/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/buildConfig/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/build/generated/source/apt/androidTest/debug">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/src/androidTest/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.classroomsdk.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.classroomsdk" description="cleanup module">
+    <delete dir="${classroomsdk.output.dir}"/>
+    <delete dir="${classroomsdk.testoutput.dir}"/>
+  </target>
+</project>
